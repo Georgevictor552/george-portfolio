@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>George Victor — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --accent: #00f5a0;
+    --accent2: #00d9f5;
+    --dark: #080c10;
+    --dark2: #0d1117;
+    --dark3: #161b22;
+    --dark4: #21262d;
+    --text: #e6edf3;
+    --muted: #7d8590;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed; top: 0; left: 0;
+    pointer-events: none; z-index: 9998;
+    transition: all 0.15s ease;
+    opacity: 0.5;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* Navigation */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex; justify-content: space-between; align-items: center;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem; font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-links a {
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,160,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,245,160,0.08) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+  }
+  .hero-glow2 {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,217,245,0.06) 0%, transparent 70%);
+    bottom: 0; left: 200px;
+    pointer-events: none;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 800px; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1.5rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 .name-accent { color: var(--accent); }
+  .hero h1 .dim { color: var(--muted); }
+  .hero-desc {
+    font-size: 0.9rem; line-height: 1.8;
+    color: var(--muted); max-width: 500px;
+    margin-bottom: 2.5rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    padding: 0.875rem 2rem;
+    background: var(--accent);
+    color: var(--dark);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none;
+    border: none; cursor: none;
+    transition: all 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-2px); }
+  .btn-outline {
+    padding: 0.875rem 2rem;
+    background: transparent;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,0.15);
+    cursor: none;
+    transition: all 0.2s;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  .hero-stats {
+    position: absolute; right: 4rem; bottom: 4rem;
+    display: flex; flex-direction: column; gap: 2rem;
+    z-index: 2;
+  }
+  .stat { text-align: right; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.5rem; font-weight: 800;
+    color: var(--accent); line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--muted);
+  }
+
+  /* Section styles */
+  section { padding: 6rem 4rem; }
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 1rem;
+  }
+  .section-tag::before { content: '//'; margin-right: 4px; opacity: 0.5; }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800; letter-spacing: -0.02em;
+    margin-bottom: 3rem; line-height: 1.1;
+  }
+
+  /* About */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: start;
+  }
+  .about-text { font-size: 0.9rem; line-height: 1.9; color: var(--muted); }
+  .about-text p { margin-bottom: 1rem; }
+  .about-text strong { color: var(--text); }
+
+  .skills-grid { display: flex; flex-direction: column; gap: 1rem; }
+  .skill-item { display: flex; flex-direction: column; gap: 6px; }
+  .skill-header { display: flex; justify-content: space-between; font-size: 0.75rem; }
+  .skill-name { color: var(--text); letter-spacing: 0.05em; }
+  .skill-pct { color: var(--accent); font-weight: 500; }
+  .skill-bar {
+    height: 2px; background: var(--dark4);
+    position: relative; overflow: hidden;
+  }
+  .skill-fill {
+    position: absolute; top: 0; left: 0; height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    animation: fillBar 1.5s ease forwards;
+    transform-origin: left;
+  }
+  @keyframes fillBar { from { width: 0; } }
+
+  /* Experience */
+  .exp-list { display: flex; flex-direction: column; gap: 0; }
+  .exp-item {
+    display: grid; grid-template-columns: 200px 1fr;
+    gap: 2rem; padding: 2.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+  }
+  .exp-item::before {
+    content: '';
+    position: absolute; left: 190px; top: 0; bottom: 0;
+    width: 1px; background: rgba(255,255,255,0.05);
+  }
+  .exp-date { font-size: 0.7rem; color: var(--muted); padding-top: 4px; letter-spacing: 0.05em; }
+  .exp-company {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); margin-bottom: 4px;
+  }
+  .exp-role { font-size: 0.8rem; color: var(--text); margin-bottom: 8px; letter-spacing: 0.05em; }
+  .exp-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.7; }
+
+  /* Projects */
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    padding: 2rem;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+  }
+  .project-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover { border-color: rgba(0,245,160,0.2); transform: translateY(-4px); }
+  .project-card:hover::before { transform: scaleX(1); }
+  .project-num {
+    font-size: 0.65rem; color: var(--accent);
+    letter-spacing: 0.15em; margin-bottom: 1rem;
+  }
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 0.75rem; color: var(--text);
+  }
+  .project-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.7; margin-bottom: 1.5rem; }
+  .project-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid rgba(0,245,160,0.2);
+    color: var(--accent);
+  }
+
+  /* Contact */
+  .contact-inner {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+  .contact-info { display: flex; flex-direction: column; gap: 1.5rem; }
+  .contact-item {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 1.25rem;
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: border-color 0.2s;
+  }
+  .contact-item:hover { border-color: rgba(0,245,160,0.3); }
+  .contact-icon {
+    width: 36px; height: 36px;
+    background: rgba(0,245,160,0.08);
+    border: 1px solid rgba(0,245,160,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+  }
+  .contact-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .contact-value { font-size: 0.85rem; color: var(--text); }
+
+  .contact-form { display: flex; flex-direction: column; gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-label { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .form-input, .form-textarea {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    padding: 0.875rem 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .form-input:focus, .form-textarea:focus { border-color: var(--accent); }
+  .form-textarea { resize: none; height: 120px; }
+
+  /* Footer */
+  footer {
+    padding: 2rem 4rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-copy { font-size: 0.7rem; color: var(--muted); }
+  .footer-copy span { color: var(--accent); }
+
+  /* Animations */
+  .fade-up {
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.8s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .delay-1 { animation-delay: 0.1s; }
+  .delay-2 { animation-delay: 0.2s; }
+  .delay-3 { animation-delay: 0.3s; }
+  .delay-4 { animation-delay: 0.4s; }
+  .delay-5 { animation-delay: 0.5s; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--dark); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.25rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .hero-stats { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
+    .exp-item::before { display: none; }
+    .contact-inner { grid-template-columns: 1fr; gap: 2rem; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">GV<span>.</span></div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#experience">Experience</a>
+    <a href="#projects">Projects</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-tag fade-up">Available for hire</div>
+    <h1 class="fade-up delay-1">
+      <span class="dim">Hello, I'm</span><br>
+      <span class="name-accent">George</span><br>
+      Victor
+    </h1>
+    <p class="hero-desc fade-up delay-2">
+      Web Developer · Graphic Designer · Network Analyst.<br>
+      Building digital experiences and solving technical problems with precision and creativity.
+    </p>
+    <div class="hero-btns fade-up delay-3">
+      <a href="#projects" class="btn-primary">View My Work</a>
+      <a href="#contact" class="btn-outline">Get In Touch</a>
+    </div>
+  </div>
+  <div class="hero-stats fade-up delay-4">
+    <div class="stat">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Years Experience</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">10+</div>
+      <div class="stat-label">Projects Done</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">Core Specialties</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" style="background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04);">
+  <div class="section-tag">About Me</div>
+  <div class="section-title">Who I Am</div>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>I'm <strong>George Victor</strong>, a multi-disciplined tech professional with a passion for building things that work beautifully — both visually and technically.</p>
+      <p>I combine <strong>web development</strong>, <strong>graphic design</strong>, and <strong>network analysis</strong> to deliver complete digital solutions. Whether it's building a responsive website, designing a brand identity, or diagnosing network issues, I bring the same dedication and precision to every task.</p>
+      <p>My experience at <strong>Hooptelecoms</strong> as a Technical Support Staff sharpened my problem-solving skills and gave me real-world exposure to network infrastructure and client-facing communication.</p>
+      <p>I believe great work sits at the intersection of <strong>technology and creativity</strong> — and that's exactly where I thrive.</p>
+    </div>
+    <div>
+      <div style="margin-bottom: 0.75rem; font-size: 0.65rem; color: var(--muted); letter-spacing: 0.15em; text-transform: uppercase;">// Skills & Proficiency</div>
+      <div class="skills-grid">
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">HTML / CSS</span><span class="skill-pct">95%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:95%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">JavaScript</span><span class="skill-pct">80%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">Tailwind CSS</span><span class="skill-pct">85%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">Graphic Design</span><span class="skill-pct">88%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">Network Analysis</span><span class="skill-pct">82%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">Technical Support</span><span class="skill-pct">90%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-item">
+          <div class="skill-header"><span class="skill-name">Figma</span><span class="skill-pct">78%</span></div>
+          <div class="skill-bar"><div class="skill-fill" style="width:78%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-tag">Experience</div>
+  <div class="section-title">Work History</div>
+  <div class="exp-list">
+    <div class="exp-item">
+      <div class="exp-date">2021 — Present</div>
+      <div>
+        <div class="exp-company">Hooptelecoms</div>
+        <div class="exp-role">Technical Support Staff</div>
+        <div class="exp-desc">Provided technical support for network infrastructure and client systems. Diagnosed and resolved connectivity issues, maintained network equipment, and delivered excellent customer-facing communication. Collaborated with engineering teams to ensure optimal network performance and uptime.</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">2020 — 2021</div>
+      <div>
+        <div class="exp-company">Freelance</div>
+        <div class="exp-role">Web Developer & Graphic Designer</div>
+        <div class="exp-desc">Designed and developed websites and visual identities for clients across various industries. Delivered responsive, modern web solutions using HTML, CSS, JavaScript and Tailwind. Created logos, branding materials, flyers, and digital assets for small businesses.</div>
+      </div>
+    </div>
+    <div class="exp-item">
+      <div class="exp-date">2019 — 2020</div>
+      <div>
+        <div class="exp-company">Network Projects</div>
+        <div class="exp-role">Network Analyst (Junior)</div>
+        <div class="exp-desc">Analysed network traffic, monitored performance metrics, and assisted in the planning and implementation of network upgrades. Gained hands-on experience with routing, switching, and network security fundamentals.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" style="background: var(--dark2); border-top: 1px solid rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.04);">
+  <div class="section-tag">Projects</div>
+  <div class="section-title">Featured Work</div>
+  <div class="projects-grid">
+    <div class="project-card">
+      <div class="project-num">01 —</div>
+      <div class="project-title">Business Website Design</div>
+      <div class="project-desc">A fully responsive business website built from scratch with clean UI, smooth animations, and optimised performance. Designed and developed end-to-end.</div>
+      <div class="project-tags">
+        <span class="tag">HTML</span><span class="tag">CSS</span><span class="tag">JavaScript</span><span class="tag">Tailwind</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">02 —</div>
+      <div class="project-title">Brand Identity Design</div>
+      <div class="project-desc">Complete brand identity package including logo design, colour palette, typography system, and brand guidelines for a local business client.</div>
+      <div class="project-tags">
+        <span class="tag">Figma</span><span class="tag">Illustrator</span><span class="tag">Branding</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">03 —</div>
+      <div class="project-title">Network Monitoring Dashboard</div>
+      <div class="project-desc">Designed a dashboard interface for monitoring network health metrics, traffic analysis and alert management for the technical support team at Hooptelecoms.</div>
+      <div class="project-tags">
+        <span class="tag">Network</span><span class="tag">UI Design</span><span class="tag">Figma</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">04 —</div>
+      <div class="project-title">Funeral Booklet Design</div>
+      <div class="project-desc">Designed and produced a professionally formatted funeral biography booklet with elegant layout, typography, and image placement for a memorial event.</div>
+      <div class="project-tags">
+        <span class="tag">Print Design</span><span class="tag">Layout</span><span class="tag">Typography</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">05 —</div>
+      <div class="project-title">Portfolio Website</div>
+      <div class="project-desc">This very portfolio — designed and built with a dark modern aesthetic, custom cursor, smooth animations and fully responsive layout across all devices.</div>
+      <div class="project-tags">
+        <span class="tag">HTML</span><span class="tag">Tailwind</span><span class="tag">JavaScript</span>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-num">06 —</div>
+      <div class="project-title">Technical Support System</div>
+      <div class="project-desc">Helped design and implement an internal ticketing and issue-tracking workflow for the support team, reducing resolution time and improving client satisfaction.</div>
+      <div class="project-tags">
+        <span class="tag">Support</span><span class="tag">Workflow</span><span class="tag">Network</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-tag">Contact</div>
+  <div class="section-title">Let's Work Together</div>
+  <div class="contact-inner">
+    <div class="contact-info">
+      <p style="font-size:0.85rem; color:var(--muted); line-height:1.8; margin-bottom:1rem;">
+        Have a project in mind? Whether it's a website, a design job, or a network challenge — I'm open to new opportunities and collaborations.
+      </p>
+      <div class="contact-item">
+        <div class="contact-icon">✉</div>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-value">georgevictor@email.com</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">📍</div>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-value">Nigeria</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">💼</div>
+        <div>
+          <div class="contact-label">Company</div>
+          <div class="contact-value">Hooptelecoms — Technical Support</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">⚡</div>
+        <div>
+          <div class="contact-label">Availability</div>
+          <div class="contact-value" style="color:var(--accent);">Open to freelance & full-time</div>
+        </div>
+      </div>
+    </div>
+    <div class="contact-form">
+      <div class="form-group">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-input" placeholder="John Doe">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" class="form-input" placeholder="john@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" placeholder="Tell me about your project..."></textarea>
+      </div>
+      <button class="btn-primary" style="align-self:flex-start; border:none;" onclick="alert('Message sent! George will get back to you soon.')">Send Message</button>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-copy">© 2024 <span>George Victor</span>. All rights reserved.</div>
+  <div class="footer-copy">Built with HTML · Tailwind · JavaScript</div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.transform = `translate(${mx-6}px, ${my-6}px)`; });
+  function animRing() { rx += (mx - rx) * 0.12; ry += (my - ry) *.12; ring.style.transform = `translate(${rx-18}px, ${ry-18}px)`; requestAnimationFrame(animRing); }
+  animRing();
+  document.querySelectorAll('a, button, .project-card').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform += ' scale(1.8)'; ring.style.opacity = '1'; });
+    el.addEventListener('mouseleave', () => { ring.style.opacity = '0.5'; });
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting) { e.target.style.opacity='1'; e.target.style.transform='translateY(0)'; } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.exp-item, .project-card, .contact-item').forEach(el => {
+    el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+
+  // Active nav link
+  const sections = document.querySelectorAll('section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => { if(window.scrollY >= s.offsetTop - 200) current = s.id; });
+    document.querySelectorAll('.nav-links a').forEach(a => {
+      a.style.color = a.getAttribute('href') === '#'+current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
